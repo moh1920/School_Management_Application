@@ -1,0 +1,30 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/SchoolManagement
+    username: sayari
+    password: sayari
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+
+
+server:
+  port: 8020
+  servlet:
+    context-path: /api/v1
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+jwt:
+  secret: ZmFrZV9zZWNyZXRfZmFrZV9zZWNyZXRfZmFrZV9zZWNyZXRfMTIzNDU2
+  expiration-ms: 3600000
