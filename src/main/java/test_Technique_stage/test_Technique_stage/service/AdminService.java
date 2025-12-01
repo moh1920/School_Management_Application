@@ -11,7 +11,7 @@ import test_Technique_stage.test_Technique_stage.repositories.AdminRepo;
 
 import java.util.List;
 
-@Service // <-- rend ce bean détectable par Spring
+@Service
 public class AdminService implements UserDetailsService {
 
     @Autowired
