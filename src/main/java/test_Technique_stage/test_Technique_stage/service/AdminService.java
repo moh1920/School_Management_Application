@@ -24,7 +24,7 @@ public class AdminService implements UserDetailsService {
 
         return User.builder()
                 .username(admin.getUsername())
-                .password(admin.getPassword()) // doit être déjà encodé (BCrypt)
+                .password(admin.getPassword())
                 .authorities(List.of(new SimpleGrantedAuthority("ROLE_ADMIN")))
                 .accountExpired(false)
                 .accountLocked(false)
@@ -33,7 +33,6 @@ public class AdminService implements UserDetailsService {
                 .build();
     }
 
-    // méthodes utilitaires pour register
     public boolean existsByUsername(String username) {
         return adminRepository.existsByUsername(username);
     }

@@ -54,9 +54,7 @@ public class AuthController {
 
 
 
-    @Data @AllArgsConstructor static class AuthResponse {
-        private String token;
-    }
+
 
 
 }
