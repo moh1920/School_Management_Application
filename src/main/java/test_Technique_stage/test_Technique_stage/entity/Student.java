@@ -21,6 +21,7 @@ public class Student {
     private Long id;
     @NotBlank(message = "Username cannot be empty")
     @Size(min = 3, max = 15, message = "Username must be between 3 and 15 characters")
+    @Column(nullable = false, unique = true)
     private String username ;
     @Enumerated(EnumType.STRING)
     private Level level ;
