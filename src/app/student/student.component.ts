@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { finalize } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 import { PagedResponse } from '../models/PagedResponse';
 import { StudentResponse } from '../models/StudentResponse';
 import { StudentService } from '../services/student.service';
-import {Router} from "@angular/router";
+import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { StudentRequest } from '../models/StudentRequest';
+import {AuthService} from "../services/auth.service";
 
 @Component({
   selector: 'app-student',
@@ -19,9 +22,29 @@ export class StudentComponent implements OnInit {
   loading = false;
   errorMessage: string | null = null;
 
-  constructor(private studentService: StudentService,private router : Router) {}
+  studentForm!: FormGroup;
+  showModal = false;
+  currentStudentId!: number;
+
+  searchValue: string = "";
+  isSearching = false;
+
+  isFiltering = false;
+
+
+  constructor(
+    private studentService: StudentService,
+    private router: Router,
+    private fb: FormBuilder,
+    private authService : AuthService,
+  ) {}
 
   ngOnInit(): void {
+    this.studentForm = this.fb.group({
+      username: ['', Validators.required],
+      level: ['', Validators.required]
+    });
+
     this.loadStudents(this.page, this.size);
   }
 
@@ -31,13 +54,13 @@ export class StudentComponent implements OnInit {
     this.page = page;
 
     this.studentService.getAllStudents(page, size)
-      .pipe(finalize(() => this.loading = false))
+      .pipe(finalize(() => (this.loading = false)))
       .subscribe({
         next: (res: PagedResponse<StudentResponse>) => {
-          this.students = res.content;
-          this.size = res.size;
-          this.totalPages = res.totalPages;
-          this.totalElements = res.totalElements;
+          this.students = res.content || [];
+          this.size = res.size ?? this.size;
+          this.totalPages = res.totalPages ?? 0;
+          this.totalElements = res.totalElements ?? 0;
         },
         error: (err) => {
           console.error(err);
@@ -92,5 +115,139 @@ export class StudentComponent implements OnInit {
 
   navigateToAddStudent(): void {
     this.router.navigate(['/addStudent']);
+  }
+
+  // suppression: on recharge la page actuelle après succès
+  deleteStudent(id: number) {
+    if (!confirm('Voulez-vous vraiment supprimer cet étudiant ?')) {
+      return;
+    }
+
+    this.studentService.deleteStudent(id).subscribe({
+      next: () => {
+        const willHaveNoItems = (this.totalElements - 1) <= this.page * this.size && this.page > 0;
+        const newPage = willHaveNoItems ? this.page - 1 : this.page;
+        this.totalElements = Math.max(0, this.totalElements - 1);
+        this.loadStudents(newPage, this.size);
+      },
+      error: (err) => {
+        console.error('Erreur lors de la suppression :', err);
+        this.errorMessage = "Impossible de supprimer l'étudiant. Réessayez.";
+      }
+    });
+  }
+
+  editStudent(student: StudentResponse) {
+    if (!student) return;
+
+    this.currentStudentId = student.id;
+    this.studentForm.patchValue({
+      username: student.username,
+      level: student.level
+    });
+    this.showModal = true;
+
+    // focus sur modal pour capture du keydown.escape (optionnel selon DOM)
+    setTimeout(() => {
+      const backdrop = document.querySelector('.modal-backdrop') as HTMLElement | null;
+      if (backdrop) backdrop.focus();
+    }, 0);
+  }
+
+  closeModal() {
+    this.showModal = false;
+    this.studentForm.reset();
+  }
+
+  updateStudent() {
+    if (this.studentForm.valid) {
+      const student: StudentRequest = this.studentForm.value;
+      this.studentService.updateStudent(this.currentStudentId, student).subscribe({
+        next: () => {
+          this.loadStudents(this.page, this.size);
+          this.closeModal();
+        },
+        error: (err) => {
+          console.error(err);
+          this.errorMessage = "Impossible de mettre à jour l'étudiant. Réessayez.";
+        }
+      });
+    } else {
+      this.studentForm.markAllAsTouched();
+    }
+  }
+
+  trackById(index: number, item: StudentResponse) {
+    return item.id;
+  }
+
+
+  performSearch() {
+    if (!this.searchValue.trim()) return;
+
+    this.isSearching = true;
+    this.isFiltering = false;
+
+    const value = this.searchValue.trim();
+
+    const id = Number(value);
+    const isNumeric = !isNaN(id);
+
+    this.studentService.searchStudent(isNumeric ? id : undefined, !isNumeric ? value : undefined)
+      .subscribe({
+        next: (student) => {
+          this.students = [student];
+          this.totalElements = 1;
+          this.totalPages = 1;
+        },
+        error: () => {
+          this.students = [];
+          this.errorMessage = "Aucun étudiant trouvé.";
+        }
+      });
+  }
+
+
+  resetSearch() {
+    this.searchValue = "";
+    this.isSearching = false;
+    this.loadStudents(0, this.size);
+  }
+
+
+  filterByLevel(event: Event) {
+    const level = (event.target as HTMLSelectElement).value;
+
+    if (!level) {
+      this.resetFilter();
+      return;
+    }
+
+    this.isFiltering = true;
+    this.isSearching = false;
+
+    this.studentService.filterByLevel(level)
+      .subscribe(
+         (student) => {
+           console.log(student);
+          this.students = [student];
+          this.totalElements = 1;
+          this.totalPages = 1;
+        },
+         () => {
+          this.students = [];
+          this.errorMessage = "Aucun étudiant trouvé avec ce niveau.";
+
+      });
+  }
+  resetFilter() {
+    this.isFiltering = false;
+    this.loadStudents(0, this.size);
+  }
+
+  logout() {
+    this.authService.logout()
+    setTimeout(() => this.router.navigate(['/login']), 1500);
+
   }
 }

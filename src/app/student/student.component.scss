@@ -191,6 +191,56 @@
                 letter-spacing: 0.5px;
               }
             }
+
+            &.action-cell {
+              .action-buttons {
+                display: flex;
+                gap: 8px;
+                justify-content: flex-start;
+
+                button {
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  width: 36px;
+                  height: 36px;
+                  border: none;
+                  border-radius: 6px;
+                  cursor: pointer;
+                  transition: all 0.3s ease;
+
+                  svg {
+                    flex-shrink: 0;
+                  }
+
+                  &.btn-edit {
+                    background: linear-gradient(135deg, #3498db, #2980b9);
+                    color: white;
+
+                    &:hover {
+                      background: linear-gradient(135deg, #2980b9, #21618c);
+                      transform: translateY(-2px);
+                      box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+                    }
+                  }
+
+                  &.btn-delete {
+                    background: linear-gradient(135deg, #e74c3c, #c0392b);
+                    color: white;
+
+                    &:hover {
+                      background: linear-gradient(135deg, #c0392b, #a93226);
+                      transform: translateY(-2px);
+                      box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+                    }
+                  }
+
+                  &:active {
+                    transform: translateY(0);
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -359,3 +409,256 @@
     }
   }
 }
+/* ============================
+   MODAL BACKDROP
+================================ */
+.modal-backdrop {
+  position: fixed;
+  inset: 0; /* top, left, bottom, right: 0 */
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+
+  /* pour gérer la touche Échap */
+  outline: none;
+
+  animation: fadeIn 0.25s ease-out;
+}
+
+/* ============================
+   MODAL BOX
+================================ */
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 15px;
+  animation: scaleIn 0.25s ease-out;
+}
+
+.modal-content {
+  background: #ffffff;
+  width: 420px;
+  max-width: 90%;
+  border-radius: 12px;
+  padding: 25px 30px;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
+  position: relative;
+  animation: slideUp 0.28s ease-out;
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ============================
+   TITLE
+================================ */
+.modal-content h3 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+  text-align: center;
+  color: #2c3e50;
+}
+
+/* ============================
+   FORM GROUP
+================================ */
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #4a5568;
+}
+
+.form-group input,
+.form-group select {
+  padding: 10px 12px;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  background: #fafafa;
+  transition: all 0.2s ease;
+
+  &:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+    background: #fff;
+  }
+}
+
+/* message d'erreur */
+.error {
+  color: #d62828;
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+/* ============================
+   ACTION BUTTONS
+================================ */
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.modal-actions button {
+  flex: 1;
+  padding: 10px 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.modal-actions button[type="submit"] {
+  background: #2563eb;
+  color: white;
+  margin-right: 10px;
+
+  &:hover {
+    background: #1e4ecc;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.modal-actions button[type="button"] {
+  background: #e2e8f0;
+  color: #334155;
+
+  &:hover {
+    background: #cbd5e1;
+  }
+}
+
+/* ============================
+   ANIMATIONS
+================================ */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(25px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.96); }
+  to   { transform: scale(1); }
+}
+
+/* ============================
+   RESPONSIVE
+================================ */
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 20px;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .modal-actions button[type="submit"] {
+    margin-right: 0;
+  }
+}
+
+.search-filter-container {
+  margin: 20px 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.search-box,
+.filter-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.search-box input {
+  padding: 10px 12px;
+  width: 250px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background: #fafafa;
+  transition: 0.2s;
+}
+
+.search-box input:focus {
+  border-color: #2563eb;
+  background: white;
+}
+
+.search-btn,
+.reset-btn {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.search-btn {
+  background: #2563eb;
+  color: white;
+
+  &:hover {
+    background: #1e4ecc;
+  }
+}
+
+.reset-btn {
+  background: #ef4444;
+  color: white;
+
+  &:hover {
+    background: #dc2626;
+  }
+}
+
+.filter-box select {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+}
+.logout-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: 0.2s;
+}
+
+.logout-btn:hover {
+  background-color: #c0392b;
+}
+

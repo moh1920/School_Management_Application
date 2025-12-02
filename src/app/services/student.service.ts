@@ -4,6 +4,7 @@ import {catchError, Observable, throwError} from "rxjs";
 import {PagedResponse} from "../models/PagedResponse";
 import {StudentResponse} from "../models/StudentResponse";
 import {Level, StudentRequest} from "../models/StudentRequest";
+import {FormGroup} from "@angular/forms";
 const API_BASE_URL = 'http://localhost:8020/api/v1/student';
 
 @Injectable({
@@ -12,6 +13,7 @@ const API_BASE_URL = 'http://localhost:8020/api/v1/student';
 export class StudentService {
 
   private base = API_BASE_URL;
+
 
   constructor(private http: HttpClient) {}
 
@@ -46,6 +48,38 @@ export class StudentService {
     return this.http.put(`${this.base}/updateStudent/${id}`, student,{headers});
   }
 
+
+
+  deleteStudent(id: number): Observable<any> {
+    const token = localStorage.getItem('jwt');
+    const headers = token ? new HttpHeaders({ 'Authorization': `Bearer ${token}` }) : undefined;
+
+    return this.http.delete(`${this.base}/deleteStudent/${id}`,{headers});
+  }
+
+
+  searchStudent(id?: number, username?: string): Observable<StudentResponse> {
+    const token = localStorage.getItem('jwt');
+    const headers = token ? new HttpHeaders({ 'Authorization': `Bearer ${token}` }) : undefined;
+
+    let params = new HttpParams();
+
+    if (id !== undefined) params = params.set('id', id);
+    if (username !== undefined && username.trim() !== '') params = params.set('username', username);
+
+    return this.http.get<StudentResponse>(`${this.base}/search`, { params ,headers});
+  }
+
+
+  filterByLevel(level: string): Observable<StudentResponse> {
+
+    const token = localStorage.getItem('jwt');
+    const headers = token ? new HttpHeaders({ 'Authorization': `Bearer ${token}` }) : undefined;
+
+    const params = new HttpParams().set('level', level);
+    return this.http.get<StudentResponse>(`${this.base}/filter`, { params ,headers});
+  }
+
   getStudentById(id: number): Observable<StudentResponse> {
     return this.http.get<StudentResponse>(`${this.base}/getStudentById/${id}`)
       .pipe(catchError(this.handleError));
@@ -54,45 +88,10 @@ export class StudentService {
 
 
 
-  deleteStudent(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.base}/deleteStudent/${id}`)
-      .pipe(catchError(this.handleError));
-  }
 
-  searchStudent(id?: number, username?: string): Observable<StudentResponse> {
-    const token = localStorage.getItem('jwt');
-    const headers = token ? new HttpHeaders({ 'Authorization': `Bearer ${token}` }) : undefined;
 
-    let params = new HttpParams();
-    if (id != null) { params = params.set('id', String(id)); }
-    if (username) { params = params.set('username', username); }
-    return this.http.get<StudentResponse>(`${this.base}/search`, { params,headers })
-      .pipe(catchError(this.handleError));
-  }
 
-  // Filtrer par level (enum)
-  filterByLevel(level: Level): Observable<StudentResponse> {
-    const params = new HttpParams().set('level', level);
-    return this.http.get<StudentResponse>(`${this.base}/filter`, { params })
-      .pipe(catchError(this.handleError));
-  }
 
-  /**
-   * Upload CSV de students.
-   * Retourne HttpEvent pour permettre suivi progression (upload progress).
-   * On peut l'utiliser dans le composant avec observe:'events' et reportProgress:true.
-   */
-  uploadStudents(file: File): Observable<HttpEvent<any>> {
-    const form = new FormData();
-    form.append('file', file, file.name);
-
-    const req = new HttpRequest('POST', `${this.base}/upload-students`, form, {
-      reportProgress: true,
-      responseType: 'json'
-    });
-
-    return this.http.request(req).pipe(catchError(this.handleError));
-  }
 
   // Gestion d'erreur simple centralisée
   private handleError(error: any) {
