@@ -1,4 +1,4 @@
-package test_Technique_stage.test_Technique_stage.controller;
+package test_Technique_stage.test_Technique_stage.DTOs;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

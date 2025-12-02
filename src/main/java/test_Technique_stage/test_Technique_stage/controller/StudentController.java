@@ -52,7 +52,7 @@ public class StudentController {
 
         try {
             Page<StudentResponse> studentResponses = studentService.getAllStudent(pageable);
-            return ResponseEntity.status(HttpStatus.FOUND).body(studentResponses);
+            return ResponseEntity.ok().body(studentResponses);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Erreur : " + e.getMessage());
         }
@@ -70,7 +70,7 @@ public class StudentController {
     @PostMapping("createStudent")
     public ResponseEntity<?> createStudent(@Valid @RequestBody StudentRequest studentRequest) {
         try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(studentService.addStudent(studentRequest));
+            return ResponseEntity.ok().body(studentService.addStudent(studentRequest));
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -102,18 +102,18 @@ public class StudentController {
             @RequestParam(value = "username", required = false) String username
     ) {
         try {
-            return ResponseEntity.status(HttpStatus.FOUND).body(studentService.getStudentByUsernameOrId(id,username)) ;
+            return ResponseEntity.status(HttpStatus.OK  ).body(studentService.getStudentByUsernameOrId(id,username)) ;
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
     @GetMapping("/filter")
-    public ResponseEntity<StudentResponse> filterStudentByLevel(
+    public ResponseEntity<?> filterStudentByLevel(
             @RequestParam("level") Level level
     ) {
         try {
-            return ResponseEntity.status(HttpStatus.FOUND).body(studentService.filterStudentByLevel(level)) ;
+            return ResponseEntity.status(HttpStatus.OK).body(studentService.filterStudentByLevel(level)) ;
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -148,18 +148,9 @@ public class StudentController {
             return ResponseEntity.ok()
                     .body("Job lancé (id=" + execution.getId() + ") - Statut: " + execution.getStatus());
         } catch (Exception e) {
-            // log exception (use a logger); do not expose stack traces in production
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erreur durant l'upload / lancement du job: " + e.getMessage());
-        } finally {
-            // try to delete now (best-effort) — be careful if job reads it after we delete synchronously
-            // If job runs synchronously (default), it's safe to delete after launch; if async, don't delete here.
-            if (tmp != null && tmp.exists()) {
-                // only delete if job is not running in another thread and still needs it.
-                // If you run jobs async, prefer storing file in an accessible location (S3, DB) instead.
-                // tmp.delete(); // optionally attempt deletion
-            }
         }
     }
 

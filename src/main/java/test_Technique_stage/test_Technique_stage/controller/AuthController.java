@@ -1,8 +1,6 @@
 package test_Technique_stage.test_Technique_stage.controller;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,6 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import test_Technique_stage.test_Technique_stage.DTOs.AuthRequest;
+import test_Technique_stage.test_Technique_stage.DTOs.AuthResponse;
 import test_Technique_stage.test_Technique_stage.DTOs.RegisterRequest;
 import test_Technique_stage.test_Technique_stage.entity.Admin;
 import test_Technique_stage.test_Technique_stage.security.JwtService;
@@ -49,7 +48,7 @@ public class AuthController {
         admin.setUsername(req.getUsername());
         admin.setPassword(passwordEncoder.encode(req.getPassword()));
         adminService.save(admin);
-        return ResponseEntity.ok("Admin créé");
+        return ResponseEntity.ok().build();
     }
 
 

@@ -2,6 +2,8 @@ package test_Technique_stage.test_Technique_stage.DTOs;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 import test_Technique_stage.test_Technique_stage.entity.Level;
 
 public record StudentRequest(

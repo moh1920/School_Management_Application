@@ -12,6 +12,10 @@ import test_Technique_stage.test_Technique_stage.exception.StudentException;
 import test_Technique_stage.test_Technique_stage.mappers.Mapper;
 import test_Technique_stage.test_Technique_stage.repositories.StudentRepo;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class StudentService {
@@ -83,11 +87,19 @@ public class StudentService {
 
 
 
-    public StudentResponse filterStudentByLevel(Level level) {
-        return Mapper.toStudentResponse(studentRepo.findByLevel(level)
-                .orElseThrow(() -> new StudentException(String.format("STUDENT NOT FOUND  %s" , level)))
-        );
+    public List<StudentResponse> filterStudentByLevel(Level level) {
+
+        studentRepo.findByLevel(level).stream()
+                .forEach(student -> System.out.println(student.getLevel()));
+
+        return studentRepo.findByLevel(level)
+                .stream()
+                .map(Mapper::toStudentResponse)
+                .toList();
     }
+
+
+
 
 
 
