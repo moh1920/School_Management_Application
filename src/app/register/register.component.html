@@ -1,0 +1,75 @@
+<div class="register-container">
+  <div class="register-card">
+    <h2>Créer un compte</h2>
+
+    <form #registerForm="ngForm" (ngSubmit)="register(registerForm)">
+
+      <!-- Username -->
+      <div class="form-group">
+        <label for="username">Nom d'utilisateur</label>
+        <input
+          id="username"
+          type="text"
+          [(ngModel)]="username"
+          name="username"
+          required
+          minlength="3"
+          #usernameModel="ngModel"
+        />
+
+        <div class="error" *ngIf="usernameModel.invalid && usernameModel.touched">
+          <small *ngIf="usernameModel.errors?.['required']">Le nom est obligatoire.</small>
+          <small *ngIf="usernameModel.errors?.['minlength']">3 caractères minimum.</small>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <input
+          id="password"
+          type="password"
+          [(ngModel)]="password"
+          name="password"
+          required
+          minlength="6"
+          #passwordModel="ngModel"
+        />
+
+        <div class="error" *ngIf="passwordModel.invalid && passwordModel.touched">
+          <small *ngIf="passwordModel.errors?.['required']">Le mot de passe est obligatoire.</small>
+          <small *ngIf="passwordModel.errors?.['minlength']">6 caractères minimum.</small>
+        </div>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="form-group">
+        <label for="confirmPassword">Confirmer mot de passe</label>
+        <input
+          id="confirmPassword"
+          type="password"
+          [(ngModel)]="confirmPassword"
+          name="confirmPassword"
+          required
+          #confirmPasswordModel="ngModel"
+        />
+
+        <div class="error" *ngIf="confirmPasswordModel.touched && password !== confirmPassword">
+          <small>Les mots de passe ne correspondent pas.</small>
+        </div>
+      </div>
+
+      <button type="submit" class="register-btn" [disabled]="registerForm.invalid">
+        S'inscrire
+      </button>
+
+      <div class="success" *ngIf="successMessage">{{ successMessage }}</div>
+      <div class="error" *ngIf="errorMessage">{{ errorMessage }}</div>
+    </form>
+
+    <p class="login-link">
+      Vous avez déjà un compte ?
+      <a routerLink="/login">Se connecter</a>
+    </p>
+  </div>
+</div>
