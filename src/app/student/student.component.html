@@ -1,1 +1,119 @@
-<p>student works!</p>
+<div class="students-container">
+  <div class="header">
+    <h2>Liste des étudiants</h2>
+    <div class="header-actions">
+      <button class="add-student-btn" (click)="navigateToAddStudent()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Ajouter un étudiant
+      </button>
+      <div class="page-size-selector" *ngIf="!loading && students?.length">
+        <label for="pageSize">Afficher :</label>
+        <select id="pageSize" (change)="changeSize($event)" [value]="size">
+          <option [value]="5">5</option>
+          <option [value]="10">10</option>
+          <option [value]="25">25</option>
+          <option [value]="50">50</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Chargement en cours...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="errorMessage && !loading" class="error-message">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+    </svg>
+    <span>{{ errorMessage }}</span>
+  </div>
+
+  <!-- Students Table -->
+  <div class="table-wrapper" *ngIf="!loading && students?.length">
+    <table class="students-table">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nom d'utilisateur</th>
+        <th>Niveau</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let s of students">
+        <td class="id-cell">{{ s.id }}</td>
+        <td class="username-cell">{{ s.username }}</td>
+        <td class="level-cell">
+          <span class="level-badge">{{ s.level }}</span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && (!students || students.length === 0)" class="empty-state">
+    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+      <circle cx="12" cy="7" r="4"></circle>
+    </svg>
+    <p>Aucun étudiant trouvé</p>
+    <button class="add-student-btn" (click)="navigateToAddStudent()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+      Ajouter le premier étudiant
+    </button>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination" *ngIf="totalPages > 1 && !loading">
+    <button class="nav-btn" (click)="prev()" [disabled]="page === 0">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+      Précédent
+    </button>
+
+    <div class="page-numbers">
+      <button *ngIf="getVisiblePages()[0] > 0" (click)="goToPage(0)" class="page-btn">
+        1
+      </button>
+      <span *ngIf="getVisiblePages()[0] > 1" class="ellipsis">...</span>
+
+      <button *ngFor="let p of getVisiblePages()"
+              (click)="goToPage(p)"
+              [class.active]="p === page"
+              class="page-btn">
+        {{ p + 1 }}
+      </button>
+
+      <span *ngIf="getVisiblePages()[getVisiblePages().length - 1] < totalPages - 2" class="ellipsis">...</span>
+      <button *ngIf="getVisiblePages()[getVisiblePages().length - 1] < totalPages - 1"
+              (click)="goToPage(totalPages - 1)"
+              class="page-btn">
+        {{ totalPages }}
+      </button>
+    </div>
+
+    <button class="nav-btn" (click)="next()" [disabled]="page === totalPages - 1">
+      Suivant
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+  </div>
+
+  <div class="meta-info" *ngIf="!loading && students?.length">
+    <span>Affichage de {{ (page * size) + 1 }} à {{ Math.min((page + 1) * size, totalElements) }} sur {{ totalElements }} étudiants</span>
+  </div>
+</div>

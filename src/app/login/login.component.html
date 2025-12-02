@@ -1,35 +1,47 @@
 <div class="login-container">
-  <div class="login-card">
-    <h2>Connexion</h2>
+  <h2>Connexion</h2>
 
-    <form (ngSubmit)="login()">
-      <div class="form-group">
-        <label for="username">Nom d'utilisateur</label>
-        <input
-          id="username"
-          type="text"
-          [(ngModel)]="username"
-          name="username"
-          required
-        />
+  <form (ngSubmit)="login()">
+    <!-- Username -->
+    <div class="form-group">
+      <label for="username">Nom d'utilisateur</label>
+      <input
+        id="username"
+        type="text"
+        [(ngModel)]="username"
+        name="username"
+        required
+        [class.invalid]="username && username.length === 0"
+        placeholder="Entrez votre nom"
+      />
+      <div class="error-message" *ngIf="!username">
+        Le nom d'utilisateur est requis
       </div>
+    </div>
 
-      <div class="form-group">
-        <label for="password">Mot de passe</label>
-        <input
-          id="password"
-          type="password"
-          [(ngModel)]="password"
-          name="password"
-          required
-        />
+    <!-- Password -->
+    <div class="form-group">
+      <label for="password">Mot de passe</label>
+      <input
+        id="password"
+        type="password"
+        [(ngModel)]="password"
+        name="password"
+        required
+        [class.invalid]="password && password.length === 0"
+        placeholder="Entrez votre mot de passe"
+      />
+      <div class="error-message" *ngIf="!password">
+        Le mot de passe est requis
       </div>
+    </div>
 
-      <button type="submit" class="login-btn">Se connecter</button>
+    <button type="submit" class="submit-btn">Se connecter</button>
 
-      <div class="error" *ngIf="errorMessage">
-        {{ errorMessage }}
-      </div>
-    </form>
-  </div>
+    <p class="register-link">
+      Pas encore inscrit ? <a routerLink="/register">S'inscrire</a>
+    </p>
+
+    <div class="message error" *ngIf="errorMessage">{{ errorMessage }}</div>
+  </form>
 </div>

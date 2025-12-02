@@ -1,0 +1,54 @@
+<div class="student-container">
+  <h2>Créer un étudiant</h2>
+
+  <form [formGroup]="studentForm" (ngSubmit)="saveStudent()">
+    <div class="form-group">
+      <label for="username">Prénom</label>
+      <input
+        id="username"
+        formControlName="username"
+        type="text"
+        placeholder="Entrez le prénom"
+        [class.invalid]="studentForm.get('username')?.touched && studentForm.get('username')?.invalid">
+      <div
+        class="error-message"
+        *ngIf="studentForm.get('username')?.touched && studentForm.get('username')?.invalid">
+        Le prénom est requis
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="level">Niveau</label>
+      <select
+        id="level"
+        formControlName="level"
+        [class.invalid]="studentForm.get('level')?.touched && studentForm.get('level')?.invalid">
+        <option value="" disabled selected>Sélectionnez un niveau</option>
+        <option value="BEGINNER">Débutant</option>
+        <option value="INTERMEDIATE">Intermédiaire</option>
+        <option value="ADVANCED">Avancé</option>
+        <option value="EXPERT">Expert</option>
+      </select>
+      <div
+        class="error-message"
+        *ngIf="studentForm.get('level')?.touched && studentForm.get('level')?.invalid">
+        Le niveau est requis
+      </div>
+    </div>
+
+    <button type="submit" class="submit-btn" [disabled]="studentForm.invalid">
+      Créer l'étudiant
+    </button>
+    <button  class="submit-btn" (click)="cancel()">
+      Retourne
+    </button>
+  </form>
+
+  <div
+    *ngIf="message"
+    class="message"
+    [class.success]="message.includes('succès')"
+    [class.error]="message.includes('Erreur')">
+    {{ message }}
+  </div>
+</div>

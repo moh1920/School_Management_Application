@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpEvent, HttpParams, HttpRequest} from "@angular/common/http";
+import {HttpClient, HttpEvent, HttpHeaders, HttpParams, HttpRequest} from "@angular/common/http";
 import {catchError, Observable, throwError} from "rxjs";
 import {PagedResponse} from "../models/PagedResponse";
 import {StudentResponse} from "../models/StudentResponse";
 import {Level, StudentRequest} from "../models/StudentRequest";
-const API_BASE_URL = '/student';
+const API_BASE_URL = 'http://localhost:8020/api/v1/student';
 
 @Injectable({
   providedIn: 'root'
@@ -16,11 +16,34 @@ export class StudentService {
   constructor(private http: HttpClient) {}
 
   getAllStudents(page: number, size: number): Observable<PagedResponse<StudentResponse>> {
+    const token = localStorage.getItem('jwt');
+    const headers = token ? new HttpHeaders({ 'Authorization': `Bearer ${token}` }) : undefined;
+
     const params = new HttpParams()
       .set('page', String(page))
       .set('size', String(size));
-    return this.http.get<PagedResponse<StudentResponse>>(`${this.base}/getAllStudents`, { params })
-      .pipe(catchError(this.handleError));
+
+    return this.http.get<PagedResponse<StudentResponse>>(
+      `${this.base}/getAllStudents`,
+      { headers, params }
+    );
+  }
+
+
+  createStudent(student: StudentRequest): Observable<StudentResponse> {
+    const token = localStorage.getItem('jwt');
+    const headers = token ? new HttpHeaders({ 'Authorization': `Bearer ${token}` }) : undefined;
+
+    return this.http.post<StudentResponse>(`${this.base}/createStudent`, student,{headers});
+  }
+
+
+
+  updateStudent(id: number, student: StudentRequest): Observable<any> {
+    const token = localStorage.getItem('jwt');
+    const headers = token ? new HttpHeaders({ 'Authorization': `Bearer ${token}` }) : undefined;
+
+    return this.http.put(`${this.base}/updateStudent/${id}`, student,{headers});
   }
 
   getStudentById(id: number): Observable<StudentResponse> {
@@ -28,15 +51,8 @@ export class StudentService {
       .pipe(catchError(this.handleError));
   }
 
-  createStudent(request: StudentRequest): Observable<StudentResponse> {
-    return this.http.post<StudentResponse>(`${this.base}/createStudent`, request)
-      .pipe(catchError(this.handleError));
-  }
 
-  updateStudent(id: number, request: StudentRequest): Observable<void> {
-    return this.http.put<void>(`${this.base}/updateStudent/${id}`, request)
-      .pipe(catchError(this.handleError));
-  }
+
 
   deleteStudent(id: number): Observable<void> {
     return this.http.delete<void>(`${this.base}/deleteStudent/${id}`)
@@ -44,10 +60,13 @@ export class StudentService {
   }
 
   searchStudent(id?: number, username?: string): Observable<StudentResponse> {
+    const token = localStorage.getItem('jwt');
+    const headers = token ? new HttpHeaders({ 'Authorization': `Bearer ${token}` }) : undefined;
+
     let params = new HttpParams();
     if (id != null) { params = params.set('id', String(id)); }
     if (username) { params = params.set('username', username); }
-    return this.http.get<StudentResponse>(`${this.base}/search`, { params })
+    return this.http.get<StudentResponse>(`${this.base}/search`, { params,headers })
       .pipe(catchError(this.handleError));
   }
 

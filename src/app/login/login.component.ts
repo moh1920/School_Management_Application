@@ -21,7 +21,7 @@ export class LoginComponent {
     this.authService.login({ username: this.username, password: this.password })
       .subscribe(data =>{
         this.authService.saveToken(data.token);
-        this.router.navigate(['/home']);
+        this.router.navigate(['/studentList']);
       });
   }
 }
