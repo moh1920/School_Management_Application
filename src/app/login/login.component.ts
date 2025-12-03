@@ -20,7 +20,8 @@ export class LoginComponent {
 
     this.authService.login({ username: this.username, password: this.password })
       .subscribe(data =>{
-        this.authService.saveToken(data.token);
+        this.authService.saveToken(btoa(data.token));
+        localStorage.setItem('authorized', 'true');
         this.router.navigate(['/studentList']);
       });
   }

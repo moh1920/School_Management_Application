@@ -86,6 +86,17 @@ export class StudentService {
   }
 
 
+  uploadStudents(file: File): Observable<any> {
+
+    const token = localStorage.getItem('jwt');
+    const headers = token ? new HttpHeaders({ 'Authorization': `Bearer ${token}` }) : undefined;
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post(`${this.base}/upload-students`, formData, {headers});
+  }
+
 
 
 

@@ -93,9 +93,7 @@ export class StudentComponent implements OnInit {
     this.loadStudents(0, this.size);
   }
 
-  pagesArray(): number[] {
-    return Array.from({ length: this.totalPages }, (_, i) => i);
-  }
+
 
   getVisiblePages(): number[] {
     const maxVisible = 5;
@@ -117,7 +115,6 @@ export class StudentComponent implements OnInit {
     this.router.navigate(['/addStudent']);
   }
 
-  // suppression: on recharge la page actuelle après succès
   deleteStudent(id: number) {
     if (!confirm('Voulez-vous vraiment supprimer cet étudiant ?')) {
       return;
@@ -147,7 +144,6 @@ export class StudentComponent implements OnInit {
     });
     this.showModal = true;
 
-    // focus sur modal pour capture du keydown.escape (optionnel selon DOM)
     setTimeout(() => {
       const backdrop = document.querySelector('.modal-backdrop') as HTMLElement | null;
       if (backdrop) backdrop.focus();
@@ -214,7 +210,6 @@ export class StudentComponent implements OnInit {
     this.loadStudents(0, this.size);
   }
 
-
   filterByLevel(event: Event) {
     const level = (event.target as HTMLSelectElement).value;
 
@@ -225,21 +220,35 @@ export class StudentComponent implements OnInit {
 
     this.isFiltering = true;
     this.isSearching = false;
+    this.errorMessage = '';
 
     this.studentService.filterByLevel(level)
       .subscribe(
-         (student) => {
-           console.log(student);
-          this.students = [student];
-          this.totalElements = 1;
+        (result) => {
+          if (Array.isArray(result)) {
+            this.students = result;
+          } else if (result) {
+            this.students = [result];
+          } else {
+            this.students = [];
+          }
+          this.totalElements = this.students.length;
           this.totalPages = 1;
-        },
-         () => {
-          this.students = [];
-          this.errorMessage = "Aucun étudiant trouvé avec ce niveau.";
 
-      });
+          if (this.totalElements === 0) {
+            this.errorMessage = "Aucun étudiant trouvé avec ce niveau.";
+          }
+        },
+        (err) => {
+          console.error('Erreur API', err);
+          this.students = [];
+          this.totalElements = 0;
+          this.totalPages = 0;
+          this.errorMessage = "Une erreur est survenue lors de la recherche des étudiants.";
+        }
+      );
   }
+
   resetFilter() {
     this.isFiltering = false;
     this.loadStudents(0, this.size);
@@ -249,5 +258,56 @@ export class StudentComponent implements OnInit {
     this.authService.logout()
     setTimeout(() => this.router.navigate(['/login']), 1500);
 
+  }
+
+  selectedFile!: File;
+  message = '';
+  showModalUploadExcel : Boolean = false;
+
+  onFileChange(event: any) {
+    this.selectedFile = event.target.files[0];
+  }
+
+  upload() {
+    if (!this.selectedFile) {
+      this.message = 'Veuillez sélectionner un fichier.';
+      return;
+    }
+
+    this.studentService.uploadStudents(this.selectedFile).subscribe(
+
+       (res) => {
+         this.message = 'Upload réussi '
+         this.loadStudents(this.page, this.size);
+       },
+       (err) => this.message = 'Erreur upload '
+    );
+  }
+
+
+  exportToCSV() {
+    const headers = Object.keys(this.students[0]).join(',');
+    const rows = this.students.map(student =>
+      Object.values(student).join(',')
+    );
+    const csvContent = [headers, ...rows].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'students.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+
+  importCSV() {
+    this.showModalUploadExcel =true ;
+  }
+
+  closeModalUploadCSV(){
+    this.showModalUploadExcel = false ;
   }
 }

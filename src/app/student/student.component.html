@@ -10,6 +10,9 @@
 </button>
 
 
+
+
+
 <div class="students-container">
   <div class="header">
     <!-- Search + Filter Section -->
@@ -32,14 +35,24 @@
         </button>
       </div>
 
+      <button (click)="exportToCSV()">
+        <i class="fas fa-file-csv"></i> Exporter CSV
+      </button>
+      <button (click)="importCSV()">
+        <i class="fas fa-file-csv"></i> Importer CSV
+      </button>
+
+
+
+
       <!-- Filter by Level -->
       <div class="filter-box">
         <select (change)="filterByLevel($event)">
           <option value="">-- Filtrer par niveau --</option>
-          <option value="BEGINNER">Débutant</option>
-          <option value="INTERMEDIATE">Intermédiaire</option>
-          <option value="ADVANCED">Avancé</option>
-          <option value="EXPERT">Expert</option>
+          <option value="BEGINNER">BEGINNER</option>
+          <option value="INTERMEDIATE">INTERMEDIATE</option>
+          <option value="ADVANCED">ADVANCED</option>
+          <option value="EXPERT">EXPERT</option>
         </select>
 
         <button class="reset-btn" *ngIf="isFiltering" (click)="resetFilter()">
@@ -128,6 +141,7 @@
     </table>
   </div>
 
+
   <!-- Empty State -->
   <div *ngIf="!loading && (!students || students.length === 0)" class="empty-state">
     <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -215,6 +229,25 @@
           <button type="button" (click)="closeModal()">Annuler</button>
         </div>
       </form>
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="showModalUploadExcel" class="modal-backdrop" (keydown.escape)="closeModalUploadCSV()" tabindex="-1">
+  <div class="uploader">
+    <input type="file" (change)="onFileChange($event)" accept=".csv">
+    <button (click)="upload()">Uploader</button>
+
+    <div
+      *ngIf="message"
+      class="message"
+      [ngClass]="{
+      'success': message.includes('réussi'),
+      'error': message.includes('Erreur')
+    }"
+    >
+      {{ message }}
     </div>
   </div>
 </div>
