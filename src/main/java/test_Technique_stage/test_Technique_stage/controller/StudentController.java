@@ -126,33 +126,32 @@ public class StudentController {
 
 
 
-    @PostMapping("/upload-students")
-    public ResponseEntity<?> uploadStudents(@RequestParam("file") MultipartFile file) {
-        if (file == null || file.isEmpty()) {
-            return ResponseEntity.badRequest().body("Fichier vide");
+        @PostMapping("/upload-students")
+        public ResponseEntity<?> uploadStudents(@RequestParam("file") MultipartFile file) {
+            if (file == null || file.isEmpty()) {
+                return ResponseEntity.badRequest().body("Fichier vide");
+            }
+    
+            File tmp = null;
+            try {
+                tmp = File.createTempFile("students-upload-", ".csv");
+                file.transferTo(tmp);
+                tmp.deleteOnExit(); // safety: ensures file removed on JVM exit
+    
+                JobParameters params = new JobParametersBuilder()
+                        .addString("filePath", tmp.getAbsolutePath())
+                        .addLong("time", System.currentTimeMillis())
+                        .toJobParameters();
+    
+                JobExecution execution = jobLauncher.run(importStudentJob, params);
+    
+                return ResponseEntity.ok().build();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("Erreur durant l'upload / lancement du job: " + e.getMessage());
+            }
         }
-
-        File tmp = null;
-        try {
-            tmp = File.createTempFile("students-upload-", ".csv");
-            file.transferTo(tmp);
-            tmp.deleteOnExit(); // safety: ensures file removed on JVM exit
-
-            JobParameters params = new JobParametersBuilder()
-                    .addString("filePath", tmp.getAbsolutePath())
-                    .addLong("time", System.currentTimeMillis())
-                    .toJobParameters();
-
-            JobExecution execution = jobLauncher.run(importStudentJob, params);
-
-            return ResponseEntity.ok()
-                    .body("Job lancé (id=" + execution.getId() + ") - Statut: " + execution.getStatus());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erreur durant l'upload / lancement du job: " + e.getMessage());
-        }
-    }
 
 
 

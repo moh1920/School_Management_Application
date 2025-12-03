@@ -15,6 +15,7 @@ import test_Technique_stage.test_Technique_stage.repositories.StudentRepo;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -213,10 +214,9 @@ class StudentServiceJUnitTest {
         }
 
         @Override
-        public Optional<Student> findByLevel(Level level) {
-            return store.values().stream()
-                    .filter(s -> Objects.equals(s.getLevel(), level))
-                    .findFirst();
+        public List<Student> findByLevel(Level level) {
+            return store.values().stream().collect(Collectors.toList());
+
         }
 
         // ----------------------------------------------------

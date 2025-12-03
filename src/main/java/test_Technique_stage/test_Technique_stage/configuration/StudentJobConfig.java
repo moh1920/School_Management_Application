@@ -21,7 +21,6 @@ public class StudentJobConfig {
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
 
-    // Note: inject reader/processor/writer as method parameters to avoid StepScope issues
     @Bean
     public Step studentStep(FlatFileItemReader<Student> studentReader,
                             StudentProcessor studentProcessor,

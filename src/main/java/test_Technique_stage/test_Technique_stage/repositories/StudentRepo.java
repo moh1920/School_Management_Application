@@ -12,7 +12,7 @@ public interface StudentRepo extends JpaRepository<Student,Long> {
 
     Optional<Student> findByUsername(String username);
     Optional<Student> findByUsernameAndId(String username,Long id);
-    Optional<Student> findByLevel(Level level);
+    List<Student> findByLevel(Level level);
 
 
 }

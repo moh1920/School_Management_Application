@@ -70,7 +70,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**", "/auth/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        //.requestMatchers("/student/**").permitAll()
+                        .requestMatchers("/student/**").permitAll()
                         .anyRequest().authenticated()
                 );
 
@@ -84,7 +84,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration cfg = new CorsConfiguration();
-        cfg.setAllowedOrigins(List.of("http://localhost:4200"));
+        cfg.setAllowedOrigins(List.of("http://localhost:4200",
+                "http://localhost:8080"));
         cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         cfg.setAllowedHeaders(List.of("*"));
         cfg.setAllowCredentials(true); // si tu utilises cookies / auth avec credentials

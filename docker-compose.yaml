@@ -1,4 +1,5 @@
 services:
+
   postgres:
     container_name: postgres-sql-SchoolManagement
     image: postgres
@@ -6,16 +7,44 @@ services:
       POSTGRES_USER: sayari
       POSTGRES_PASSWORD: sayari
       PGDATA: /var/lib/postgresql/data
-      POSTGRES_DB:  SchoolManagement
+      POSTGRES_DB: SchoolManagement
     volumes:
       - postgres:/data/postgres
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - 5432:5432
+      - "5432:5432"
     networks:
       - spring-demo
     restart: unless-stopped
 
+  imagebackend:
+    container_name: backend_container
+    image: backendimage
+    build:
+      context: ../../test-Technique-stage/test-Technique-stage
+      dockerfile: ../../docker/backend/Dockerfile
+    command: ["java", "-jar", "app.jar"]
+    ports:
+      - "8020:8020"
+    networks:
+      - spring-demo
+    restart: unless-stopped
+    depends_on:
+      - postgres
 
+  imagefrontend:
+    container_name: frontend_container
+    image: frontendimage
+    build:
+      context: ../../test-stage-pfe_UI/Application-Student/
+      dockerfile: ../../docker/frentEnd/Dockerfile
+    ports:
+      - "4200:80"
+    networks:
+      - spring-demo
+    restart: unless-stopped
+    depends_on:
+      - imagebackend
 
 volumes:
   postgres:

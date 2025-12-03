@@ -1,7 +1,6 @@
-# src/main/resources/application.yml
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/SchoolManagement
+    url: jdbc:postgresql://postgres-sql-SchoolManagement:5432/SchoolManagement
     username: sayari
     password: sayari
     driver-class-name: org.postgresql.Driver
@@ -18,10 +17,8 @@ spring:
 
   batch:
     jdbc:
-
       initialize-schema: always
 
-# serveur (port et context-path ne doivent pas être imbriqués sous "spring")
 server:
   port: 8020
   servlet:
@@ -31,7 +28,7 @@ logging:
   level:
     org:
       springframework:
-        security: DEBUG
+        security: DEBUG    # Debug login Keycloak/JWT
 
 jwt:
   secret: ZmFrZV9zZWNyZXRfZmFrZV9zZWNyZXRfZmFrZV9zZWNyZXRfMTIzNDU2

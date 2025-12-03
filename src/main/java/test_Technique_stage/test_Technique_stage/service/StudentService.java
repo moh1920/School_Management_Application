@@ -42,8 +42,9 @@ public class StudentService {
     public Long updateStudent(Long idStudent,StudentRequest studentRequest){
          var student = studentRepo.findById(idStudent)
                 .orElseThrow(() -> new StudentException(String.format("STUDENT NOT FOUND  :", idStudent)));
-
-        student = mapper.toStudent(studentRequest);
+//        student = mapper.toStudent(studentRequest);
+        student.setUsername(studentRequest.username());
+        student.setLevel(studentRequest.level());
         return studentRepo.save(student).getId();
     }
 
