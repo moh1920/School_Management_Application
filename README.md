@@ -98,7 +98,7 @@ test-Technique-stage/
                 │     └── StudentController.java
                 │
                 ├── DTOs/
-                │     └── (fichiers DTO de requêtes & réponses)
+                │     └── (DTO de requêtes & réponses)
                 │
                 ├── entity/
                 │     ├── Admin.java
@@ -106,7 +106,7 @@ test-Technique-stage/
                 │
                 ├── security/
                 │     ├── JwtService.java
-                │     ├── JwtFilter.java (si existant)
+                │     ├── JwtFilter.java        (si existant)
                 │     └── LoginAttemptService.java
                 │
                 ├── service/
@@ -118,13 +118,16 @@ test-Technique-stage/
                 │     └── StudentRepository.java
                 │
                 ├── mappers/
-                │     └── (DTO ↔ Entity Mappers)
+                │     └── (DTO ↔ Entity mappers)
                 │
                 └── TestTechniqueStageApplication.java
 
 
 
 Frontend
+
+
+
 test-stage-pfe_UI/
 └── Application-Student/
     ├── angular.json
