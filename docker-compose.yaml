@@ -19,7 +19,7 @@ services:
 
   imagebackend:
     container_name: backend_container
-    image: backendimage
+    image: sayarimohamed/backendimage
     build:
       context: ../../test-Technique-stage/test-Technique-stage
       dockerfile: ../../docker/backend/Dockerfile
@@ -34,7 +34,7 @@ services:
 
   imagefrontend:
     container_name: frontend_container
-    image: frontendimage
+    image: sayarimohamed/frontendimage
     build:
       context: ../../test-stage-pfe_UI/Application-Student/
       dockerfile: ../../docker/frentEnd/Dockerfile
