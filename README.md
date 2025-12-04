@@ -94,77 +94,67 @@ test-Technique-stage/
         └── java/
             └── test_Technique_stage/
                 ├── controller/
-                │     ├── AuthController.java
-                │     └── StudentController.java
+                │   ├── AuthController.java
+                │   └── StudentController.java
                 │
                 ├── DTOs/
-                │     └── (DTO de requêtes & réponses)
+                │   └── (DTOs de requêtes et réponses)
                 │
                 ├── entity/
-                │     ├── Admin.java
-                │     └── Student.java
+                │   ├── Admin.java
+                │   └── Student.java
                 │
                 ├── security/
-                │     ├── JwtService.java
-                │     ├── JwtFilter.java        (si existant)
-                │     └── LoginAttemptService.java
+                │   ├── JwtService.java
+                │   ├── JwtFilter.java   (si présent)
+                │   └── LoginAttemptService.java
                 │
                 ├── service/
-                │     ├── AdminService.java
-                │     └── StudentService.java
+                │   ├── AdminService.java
+                │   └── StudentService.java
                 │
                 ├── repositories/
-                │     ├── AdminRepository.java
-                │     └── StudentRepository.java
+                │   ├── AdminRepository.java
+                │   └── StudentRepository.java
                 │
                 ├── mappers/
-                │     └── (DTO ↔ Entity mappers)
+                │   └── (DTO ↔ Entity mappers)
                 │
                 └── TestTechniqueStageApplication.java
 
-
-
-Frontend
-
-
-
-test-stage-pfe_UI/
-└── Application-Student/
-    ├── angular.json
-    ├── package.json
-    ├── tsconfig.json
-    │
-    └── src/
-        ├── app/
-        │   ├── login/
-        │   │     ├── login.component.ts
-        │   │     ├── login.component.html
-        │   │     └── login.component.scss
-        │   │
-        │   ├── register/
-        │   │     ├── register.component.ts
-        │   │     ├── register.component.html
-        │   │     └── register.component.scss
-        │   │
-        │   ├── student/
-        │   │     ├── student-list.component.ts
-        │   │     ├── student-form.component.ts
-        │   │     └── student.service.ts
-        │   │
-        │   ├── services/
-        │   │     ├── auth.service.ts
-        │   │     └── api.service.ts
-        │   │
-        │   ├── models/
-        │   │     ├── student.model.ts
-        │   │     └── admin.model.ts
-        │   │
-        │   ├── app.component.ts
-        │   ├── app.module.ts
-        │   └── app-routing.module.ts
+Frontend: test-stage-pfe_UI/Application-Student/
+└── src/
+    └── app/
+        ├── login/
+        │   ├── login.component.ts
+        │   ├── login.component.html
+        │   └── login.component.scss
         │
-        ├── assets/
-        └── styles.scss
+        ├── register/
+        │   ├── register.component.ts
+        │   ├── register.component.html
+        │   └── register.component.scss
+        │
+        ├── student/
+        │   ├── student-list.component.ts
+        │   ├── student-form.component.ts
+        │   └── student.service.ts
+        │
+        ├── services/
+        │   ├── auth.service.ts
+        │   └── api.service.ts
+        │
+        ├── models/
+        │   ├── student.model.ts
+        │   └── admin.model.ts
+        │
+        ├── app.component.ts
+        ├── app.module.ts
+        └── app-routing.module.ts
+
+    ├── assets/
+    └── styles.scss
+
 
 
 
