@@ -84,76 +84,73 @@ sayarimohamed/backendimage
 
 sayarimohamed/frontendimage
 
-
-
 📁 Structure du Projet
 
 test-Technique-stage/
+├── pom.xml (ou build files)
 └── src/
     └── main/
-        └── java/
-            └── test_Technique_stage/
-                ├── controller/
-                │   ├── AuthController.java
-                │   └── StudentController.java
-                │
-                ├── DTOs/
-                │   └── (DTOs de requêtes et réponses)
-                │
-                ├── entity/
-                │   ├── Admin.java
-                │   └── Student.java
-                │
-                ├── security/
-                │   ├── JwtService.java
-                │   ├── JwtFilter.java   (si présent)
-                │   └── LoginAttemptService.java
-                │
-                ├── service/
-                │   ├── AdminService.java
-                │   └── StudentService.java
-                │
-                ├── repositories/
-                │   ├── AdminRepository.java
-                │   └── StudentRepository.java
-                │
-                ├── mappers/
-                │   └── (DTO ↔ Entity mappers)
-                │
-                └── TestTechniqueStageApplication.java
+        ├── java/
+        │   └── test_Technique_stage/
+        │       ├── controller/
+        │       │   ├── AuthController.java
+        │       │   └── StudentController.java
+        │       ├── DTOs/
+        │       │   └── (DTO request/response files)
+        │       ├── entity/
+        │       │   ├── Admin.java
+        │       │   └── Student.java
+        │       ├── security/
+        │       │   ├── JwtService.java
+        │       │   ├── JwtFilter.java
+        │       │   └── LoginAttemptService.java
+        │       ├── service/
+        │       │   ├── AdminService.java
+        │       │   └── StudentService.java
+        │       ├── repositories/
+        │       │   ├── AdminRepository.java
+        │       │   └── StudentRepository.java
+        │       ├── mappers/
+        │       │   └── (MapStruct or manual mappers)
+        │       └── TestTechniqueStageApplication.java
+        └── resources/
+            ├── application.yml
+            └── postgres/
+                └── init.sql
 
-Frontend: test-stage-pfe_UI/Application-Student/
-└── src/
-    └── app/
-        ├── login/
-        │   ├── login.component.ts
-        │   ├── login.component.html
-        │   └── login.component.scss
-        │
-        ├── register/
-        │   ├── register.component.ts
-        │   ├── register.component.html
-        │   └── register.component.scss
-        │
-        ├── student/
-        │   ├── student-list.component.ts
-        │   ├── student-form.component.ts
-        │   └── student.service.ts
-        │
-        ├── services/
-        │   ├── auth.service.ts
-        │   └── api.service.ts
-        │
-        ├── models/
-        │   ├── student.model.ts
-        │   └── admin.model.ts
-        │
-        ├── app.component.ts
-        ├── app.module.ts
-        └── app-routing.module.ts
+test-stage-pfe_UI/
+├── Application-Student/
+│   ├── angular.json
+│   ├── package.json
+│   ├── tsconfig.json
+│   └── src/
+│       ├── index.html
+│       ├── main.ts
+│       ├── styles.scss
+│       └── app/
+│           ├── login/
+│           │   ├── login.component.ts
+│           │   ├── login.component.html
+│           │   └── login.component.scss
+│           ├── register/
+│           │   ├── register.component.ts
+│           │   ├── register.component.html
+│           │   └── register.component.scss
+│           ├── student/
+│           │   ├── student-list.component.ts
+│           │   ├── student-form.component.ts
+│           │   └── student.service.ts
+│           ├── services/
+│           │   ├── auth.service.ts
+│           │   └── api.service.ts
+│           ├── models/
+│           │   ├── student.model.ts
+│           │   └── admin.model.ts
+│           ├── app.component.ts
+│           ├── app.module.ts
+│           └── app-routing.module.ts
+└── README-frontend.md (optionnel)
 
-    ├── assets/
-    └── styles.scss
 
 
 
