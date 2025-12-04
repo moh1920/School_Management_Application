@@ -27,7 +27,7 @@ export class StudentService {
 
     return this.http.get<PagedResponse<StudentResponse>>(
       `${this.base}/getAllStudents`,
-      { headers, params }
+      { headers: headers, params }
     );
   }
 
