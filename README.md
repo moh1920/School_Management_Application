@@ -17,23 +17,28 @@ Un déploiement complet avec Docker Compose, incluant vos images publiées sur D
 
 Il s’agit d’un travail structuré selon les standards professionnels : architecture en couches, sécurité renforcée, conteneurisation, documentation, séparation claire du frontend et du backend.
 
-🧱 Architecture Générale
-┌────────────────────────────────────────────┐
-│                 Frontend                   │
-│        Angular 16 + PrimeNG + SCSS         │
-│          (Nginx dans Docker image)         │
-└───────────────────────────────▲────────────┘
-                                │ REST API
-┌───────────────────────────────┴────────────┐
-│                 Backend                    │
-│ Spring Boot 3.4.12 - JWT - Spring Batch     │
-│ CRUD Students + Auth Admin + CSV Import     │
-└───────────────────────────────▲────────────┘
-                                │ JDBC
-┌───────────────────────────────┴────────────┐
-│                PostgreSQL                  │
-│     Dockerized + init.sql Automatique      │
-└────────────────────────────────────────────┘
+                      ┌──────────────────────────────────────────┐
+                      │                  Frontend                 │
+                      │         Angular 16 • PrimeNG • SCSS        │
+                      │           (Servi via Nginx Docker)        │
+                      └──────────────────────────┬───────────────┘
+                                                 │
+                                                 │ REST API (JWT)
+                                                 │
+                      ┌──────────────────────────┴───────────────┐
+                      │                  Backend                  │
+                      │ Spring Boot 3.4.12 • JWT • Spring Batch  │
+                      │  CRUD Students • Auth Admin • CSV Import │
+                      └──────────────────────────┬───────────────┘
+                                                 │
+                                                 │ JDBC / Hibernate
+                                                 │
+                      ┌──────────────────────────┴───────────────┐
+                      │                PostgreSQL                 │
+                      │   Dockerized • init.sql Automatique      │
+                      └──────────────────────────────────────────┘
+
+
 🛠 Technologies Utilisées
 🔹 Backend
 
@@ -84,29 +89,83 @@ sayarimohamed/frontendimage
 📁 Structure du Projet
 
 test-Technique-stage/
-└── src/main/java/test_Technique_stage/
-    ├── controller/
-    │     ├── AuthController.java
-    │     └── StudentController.java
-    ├── DTOs/
-    ├── entity/
-    ├── security/
-    │     ├── JwtService.java
-    │     └── LoginAttemptService.java
-    ├── service/
-    ├── repositories/
-    ├── mappers/
-    └── TestTechniqueStageApplication.java
-Frontend
+└── src/
+    └── main/
+        └── java/
+            └── test_Technique_stage/
+                ├── controller/
+                │     ├── AuthController.java
+                │     └── StudentController.java
+                │
+                ├── DTOs/
+                │     └── (fichiers DTO de requêtes & réponses)
+                │
+                ├── entity/
+                │     ├── Admin.java
+                │     └── Student.java
+                │
+                ├── security/
+                │     ├── JwtService.java
+                │     ├── JwtFilter.java (si existant)
+                │     └── LoginAttemptService.java
+                │
+                ├── service/
+                │     ├── AdminService.java
+                │     └── StudentService.java
+                │
+                ├── repositories/
+                │     ├── AdminRepository.java
+                │     └── StudentRepository.java
+                │
+                ├── mappers/
+                │     └── (DTO ↔ Entity Mappers)
+                │
+                └── TestTechniqueStageApplication.java
 
-test-stage-pfe_UI/Application-Student/
-└── src/app/
-    ├── login/
-    ├── register/
-    ├── services/
-    ├── student/
-    ├── models/
-    └── app.component.ts
+
+
+Frontend
+test-stage-pfe_UI/
+└── Application-Student/
+    ├── angular.json
+    ├── package.json
+    ├── tsconfig.json
+    │
+    └── src/
+        ├── app/
+        │   ├── login/
+        │   │     ├── login.component.ts
+        │   │     ├── login.component.html
+        │   │     └── login.component.scss
+        │   │
+        │   ├── register/
+        │   │     ├── register.component.ts
+        │   │     ├── register.component.html
+        │   │     └── register.component.scss
+        │   │
+        │   ├── student/
+        │   │     ├── student-list.component.ts
+        │   │     ├── student-form.component.ts
+        │   │     └── student.service.ts
+        │   │
+        │   ├── services/
+        │   │     ├── auth.service.ts
+        │   │     └── api.service.ts
+        │   │
+        │   ├── models/
+        │   │     ├── student.model.ts
+        │   │     └── admin.model.ts
+        │   │
+        │   ├── app.component.ts
+        │   ├── app.module.ts
+        │   └── app-routing.module.ts
+        │
+        ├── assets/
+        └── styles.scss
+
+
+
+    
 🗄 Configuration Backend (Spring Boot)
 application.yml
 
